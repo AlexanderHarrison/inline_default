@@ -6,6 +6,7 @@ inline_default! {
 #[derive(Copy, Clone)]
 pub(crate) struct Example<'a, T: Default> {
     pub a: &'a str = "example",
+    /// Doc comment (expands to #[doc = "..."] attribute).
     pub b: T,
 }}
 
