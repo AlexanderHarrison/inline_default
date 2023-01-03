@@ -1,6 +1,10 @@
 # Inline Default
 
 A macro for implementing `Default` within a struct definition.
+This is useful when specifying the default values within the struct 
+definition is cleaner than separating them, 
+for example structs with a large number fields,
+or when many structs are constructed.
 For example,
 ```rust
 use inline_default::inline_default;
@@ -11,7 +15,12 @@ struct KeyMap {
     down:   char = 'j',
     up:     char = 'k',
     right:  char = 'l',
-    flag:   bool, // uses bool::default() 
+
+    // uses bool::default(),
+    flag:   bool, 
+    
+    // any constant-time expression is allowed
+    qwerty: bool = Keyboard::IS_QWERTY,
 }}
 ```
 expands to
@@ -23,6 +32,7 @@ struct KeyMap {
     up:     char,
     right:  char,
     flag:   bool,
+    qwerty: bool,
 }
 
 impl Default for KeyMap {
@@ -33,6 +43,7 @@ impl Default for KeyMap {
             up:    'k',
             right: 'l',
             flag:  bool::default(),
+            qwerty: Keyboard::IS_QWERTY,
         }
     }
 }
@@ -41,43 +52,46 @@ impl Default for KeyMap {
 ## Supports:
 - Visibility specifiers
 - Use Default if not specified 
-- Attributes (including derives)
-- Lifetimes
-- Generics, with major caveats
+- Attributes (including derives) on both the struct and the fields
+- Doc comments on both the struct and the fields
+- Lifetimes and generics, with major caveats
 
 Due to the complexity in parsing trait bounds, 
 only a single trait bound without generics is accepted.
 `where` clauses are not supported.
 Specifying lifetimes are accepted, but not the 'outlives' syntax `'a: 'b`.
-For example,
+For example, the following is accepted,
 ```rust
 use inline_default::inline_default;
 
 inline_default! {
+/// Example struct
 #[derive(Copy, Clone)]
 pub(crate) struct Example<'a, T: Default> {
     pub a: &'a str = "example",
+
+    /// field b
     b: T,
 }}
 
 ```
-is accepted, but the following are not:
+but the following are not:
 ```rust
 use inline_default::inline_default;
 
-// NOT VALID
+// NOT VALID - too many trait bounds on T
 inline_default! {
 struct Example1<T: Default + Copy> {
     a: T,
 }}
 
-// NOT VALID
+// NOT VALID - Traits bounds cannot be generic
 inline_default! {
 struct Example2<T: From<f32>> {
     a: T = T::from(0.0),
 }}
 
-// NOT VALID
+// NOT VALID - outlives syntax is not supported
 inline_default! {
 struct Example2<'a, 'b: 'a> {
     a: &'a str = "test",
@@ -86,4 +100,4 @@ struct Example2<'a, 'b: 'a> {
 ```
 
 ## Proc Macro?
-Making a proc macro would be fuller feature-wise, but I couldn't be bothered.
+Making a proc macro would be fuller feature-wise, but I can't be bothered.

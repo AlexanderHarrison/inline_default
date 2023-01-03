@@ -6,7 +6,7 @@ macro_rules! inline_default {
         $(#[$s_at:meta])* // attributes
         $s_v:vis struct $s_nm:ident //struct name, vis
         $(< $($s_lt:lifetime,)* $( $s_gen:ident $(: $s_tr:ident)? ),* $(,)? >)? // generics
-        { $($(#[$f_at:meta])* $f_v:vis $f_nm:ident : $f_ty:ty $(= $def:expr)? ),* $(,)? } // definition
+        { $( $(#[$f_at:meta])* $f_v:vis $f_nm:ident : $f_ty:ty $(= $def:expr)? ),* $(,)? } // definition
     ) => {
         $(#[$s_at])*
         $s_v struct $s_nm $(< $($s_lt ,)* $($s_gen $(: $s_tr)? ),* >)? {
