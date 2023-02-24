@@ -54,6 +54,7 @@ impl Default for KeyMap {
 - Use Default if not specified 
 - Attributes (including derives) on both the struct and the fields
 - Doc comments on both the struct and the fields
+- Multiple struct definitions within each macro
 - Lifetimes and generics, with major caveats
 
 Due to the complexity in parsing trait bounds, 
