@@ -1,5 +1,8 @@
 # Inline Default
 
+[![Current Version](https://img.shields.io/crates/v/inline_default.svg)](https://crates.io/crates/inline_default)
+[![License: MIT/Apache-2.0](https://img.shields.io/crates/l/inline_default.svg)]()
+
 A macro for implementing `Default` within a struct definition.
 This is useful when specifying the default values within the struct 
 definition is cleaner than separating them, 
